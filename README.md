@@ -1,10 +1,10 @@
-# 🌟 Smart Deadline & Medication Reminder Engine (FastAPI)
+#  Smart Deadline & Medication Reminder Engine (FastAPI)
 
 A backend service that generates **intelligent reminders** for tasks and **fixed-time reminders** for medications & routines.
 
-## 🎯 Features
+##  Features
 
-### 1️⃣ Smart Task Reminder (Intelligent)
+###  Smart Task Reminder (Intelligent)
 Used for assignments, projects, exams, work deadlines.
 
 **Input:**
@@ -32,7 +32,7 @@ Used for assignments, projects, exams, work deadlines.
 }
 ```
 
-### 2️⃣ Fixed-Time Reminder (Tablet / Medicine / Alarm)
+### Fixed-Time Reminder (Tablet / Medicine / Alarm)
 Used for taking tablets, drinking water, daily routines.
 
 **Input:**
@@ -59,7 +59,7 @@ Used for taking tablets, drinking water, daily routines.
 }
 ```
 
-## 🧠 Smart Logic
+##  Smart Logic
 
 ### Task Difficulty → Reminder Count
 | Difficulty | Reminder Count | Schedule |
@@ -87,7 +87,7 @@ Score interpretation:
 - **datetime** - Time calculations
 - **Uvicorn** - ASGI server
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 smart-reminder/
@@ -99,7 +99,7 @@ smart-reminder/
 └── README.md          # This file
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Install Dependencies
 ```bash
@@ -117,7 +117,7 @@ The API will be available at: **http://localhost:8000**
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 
-## 🔌 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
@@ -126,7 +126,7 @@ The API will be available at: **http://localhost:8000**
 | **POST** | `/task-reminder` | Smart task reminders |
 | **POST** | `/fixed-reminder` | Fixed-time reminders |
 
-## 📚 Usage Examples
+##  Usage Examples
 
 ### Example 1: Hard Assignment Due in 6 Days
 ```bash
@@ -210,7 +210,7 @@ curl -X POST "http://localhost:8000/task-reminder" \
 }
 ```
 
-## ✨ Why This Project Is Great
+##  Why This Project Is Great
 
 ✅ **Real-life use case** - Medicine reminders, homework tracking
 ✅ **Intelligent logic** - Smart scheduling based on difficulty
@@ -220,18 +220,18 @@ curl -X POST "http://localhost:8000/task-reminder" \
 ✅ **Extendable** - Easy to add database, notifications, webhooks
 ✅ **Resume-worthy** - Shows backend architecture skills
 
-## 🔮 Future Enhancements
+##  Future Enhancements
 
-- ✨ Database persistence (SQLite/PostgreSQL)
-- 📧 Email/SMS notifications
-- 🔔 Push notifications
-- 📊 Analytics dashboard
-- 🔐 User authentication
-- 💾 Reminder history
-- ⏰ Custom recurring patterns
-- 🌍 Timezone support
+-  Database persistence (SQLite/PostgreSQL)
+-  Email/SMS notifications
+-  Push notifications
+-  Analytics dashboard
+-  User authentication
+-  Reminder history
+-  Custom recurring patterns
+-  Timezone support
 
-## 📝 Error Handling
+##  Error Handling
 
 The API returns proper HTTP status codes:
 
@@ -247,7 +247,7 @@ Example error response:
 }
 ```
 
-## 🧪 Testing in Swagger UI
+##  Testing in Swagger UI
 
 1. Open http://localhost:8000/docs
 2. Click on any endpoint (e.g., `/task-reminder`)
@@ -256,7 +256,7 @@ Example error response:
 5. Click **"Execute"**
 6. View the response
 
-## 📦 Requirements
+##  Requirements
 
 ```
 fastapi==0.104.1
@@ -265,21 +265,10 @@ pydantic==2.5.0
 python-dateutil==2.8.2
 ```
 
-## 👨‍💻 Author
+##  Author
 
 Built with ❤️ using FastAPI
 
-## 📄 License
 
-MIT License - Feel free to use this project!
 
----
 
-**Ready to deploy? This project is production-ready and can be deployed on:**
-- Heroku
-- AWS Lambda
-- Google Cloud Run
-- Azure App Service
-- DigitalOcean
-- Railway
-- Render
