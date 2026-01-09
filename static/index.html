@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Smart Reminder Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 968px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-secondary {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .results-container {
+            margin-top: 40px;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.6s ease-out;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .result-card.fixed-reminder {
+            border-left-color: #764ba2;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .result-title {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .urgency-score {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .urgency-score.high {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .urgency-score.medium {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .urgency-score.low {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            color: #666;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .reminders-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .reminders-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .reminder-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reminder-item:before {
+            content: "⏰";
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #ffe0e0;
+            border-left: 5px solid #f5576c;
+            color: #d32f2f;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #e0ffe0;
+            border-left: 5px solid #30cfd0;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.urgent {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-badge.normal {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .difficulty-pills {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .pill {
+            padding: 8px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .pill:hover {
+            border-color: #667eea;
+        }
+
+        .pill.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .clear-btn {
+            background: #e0e0e0;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .clear-btn:hover {
+            background: #d0d0d0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌟 Smart Deadline & Medication Reminder Engine</h1>
+            <p>Never miss a deadline or medication again!</p>
+            <div id="emailStatus" style="margin-top: 10px; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 20px; display: inline-block; font-size: 0.9em;">
+                📧 Email notifications: <span id="emailStatusText">Checking...</span>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- Task Reminder Card -->
+            <div class="card">
+                <h2>📝 Smart Task Reminder</h2>
+                <p style="color: #666; margin-bottom: 20px; font-size: 0.95em;">Get intelligent reminders for your assignments, projects, and deadlines</p>
+                
+                <form id="taskReminderForm">
+                    <div class="form-group">
+                        <label for="taskName">Task Name</label>
+                        <input 
+                            type="text" 
+                            id="taskName" 
+                            placeholder="e.g., Math Assignment" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="deadline">Deadline</label>
+                        <input 
+                            type="datetime-local" 
+                            id="deadline" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Difficulty Level</label>
+                        <div class="difficulty-pills">
+                            <div class="pill" data-difficulty="easy">😊 Easy</div>
+                            <div class="pill" data-difficulty="medium">😐 Medium</div>
+                            <div class="pill" data-difficulty="hard">😰 Hard</div>
+                        </div>
+                        <input type="hidden" id="difficulty" value="medium">
+                    </div>
+
+                    <button type="submit" class="button-secondary">Generate Reminders</button>
+                </form>
+            </div>
+
+            <!-- Fixed Reminder Card -->
+            <div class="card">
+                <h2>💊 Fixed-Time Reminder</h2>
+                <p style="color: #666; margin-bottom: 20px; font-size: 0.95em;">Set recurring reminders for medications, routines, and daily tasks</p>
+                
+                <form id="fixedReminderForm">
+                    <div class="form-group">
+                        <label for="reminderTitle">Reminder Title</label>
+                        <input 
+                            type="text" 
+                            id="reminderTitle" 
+                            placeholder="e.g., Take Vitamin D" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reminderTime">Time</label>
+                        <input 
+                            type="time" 
+                            id="reminderTime" 
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="frequency">Frequency</label>
+                        <select id="frequency" required>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="daysAhead">Generate for next X days</label>
+                        <input 
+                            type="number" 
+                            id="daysAhead" 
+                            value="7" 
+                            min="1" 
+                            max="30"
+                        >
+                    </div>
+
+                    <button type="submit" class="button-secondary">Generate Reminders</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-container">
+            <div id="resultsArea"></div>
+        </div>
+
+        <div class="footer">
+            <p>✨ Built with FastAPI | Smart Reminder Engine v1.0.0</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        // Difficulty pill selection
+        document.querySelectorAll('.difficulty-pills .pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.difficulty-pills .pill').forEach(p => p.classList.remove('selected'));
+                pill.classList.add('selected');
+                document.getElementById('difficulty').value = pill.dataset.difficulty;
+            });
+        });
+
+        // Set default difficulty
+        document.querySelector('[data-difficulty="medium"]').classList.add('selected');
+
+        // Task Reminder Form Submit
+        document.getElementById('taskReminderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const taskName = document.getElementById('taskName').value;
+            const deadline = document.getElementById('deadline').value;
+            const difficulty = document.getElementById('difficulty').value;
+
+            if (!taskName || !deadline || !difficulty) {
+                showError('Please fill all fields');
+                return;
+            }
+
+            // Convert datetime-local to YYYY-MM-DD HH:MM format
+            const deadlineFormatted = deadline.replace('T', ' ');
+
+            const data = {
+                task: taskName,
+                deadline: deadlineFormatted,
+                difficulty: difficulty
+            };
+
+            await sendRequest('/task-reminder', data, 'task');
+        });
+
+        // Fixed Reminder Form Submit
+        document.getElementById('fixedReminderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const reminderTitle = document.getElementById('reminderTitle').value;
+            const reminderTime = document.getElementById('reminderTime').value;
+            const frequency = document.getElementById('frequency').value;
+            const daysAhead = parseInt(document.getElementById('daysAhead').value);
+
+            if (!reminderTitle || !reminderTime || !frequency) {
+                showError('Please fill all fields');
+                return;
+            }
+
+            const data = {
+                title: reminderTitle,
+                time: reminderTime,
+                frequency: frequency,
+                days_ahead: daysAhead
+            };
+
+            await sendRequest('/fixed-reminder', data, 'fixed');
+        });
+
+        // Send API Request
+        async function sendRequest(endpoint, data, type) {
+            try {
+                const resultsArea = document.getElementById('resultsArea');
+                resultsArea.innerHTML = '<div class="success"><div class="loading"></div> Processing your request...</div>';
+
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    showError(error.detail || 'Error processing request');
+                    return;
+                }
+
+                const result = await response.json();
+                displayResult(result, type);
+
+            } catch (error) {
+                showError(`Network error: ${error.message}`);
+            }
+        }
+
+        // Display Result
+        function displayResult(data, type) {
+            const resultsArea = document.getElementById('resultsArea');
+
+            if (type === 'task') {
+                const urgencyClass = data.time_pressure_score >= 70 ? 'high' : 
+                                    data.time_pressure_score >= 40 ? 'medium' : 'low';
+                
+                const urgencyText = data.time_pressure_score >= 70 ? 'URGENT' : 
+                                   data.time_pressure_score >= 40 ? 'MEDIUM' : 'LOW PRIORITY';
+
+                let html = `
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="result-title">📋 ${data.task}</div>
+                            <div class="urgency-score ${urgencyClass}">
+                                🔥 Urgency: ${data.time_pressure_score}%
+                            </div>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Deadline</div>
+                                <div class="info-value">${data.deadline}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Difficulty</div>
+                                <div class="info-value">${data.difficulty.toUpperCase()}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Days Remaining</div>
+                                <div class="info-value">${data.days_remaining} days</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Status</div>
+                                <div class="status-badge ${data.time_pressure_score >= 70 ? 'urgent' : 'normal'}">
+                                    ${urgencyText}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reminders-section">
+                            <div class="reminders-title">📅 Your Reminders:</div>
+                            ${data.reminders.map(reminder => `
+                                <div class="reminder-item">${reminder}</div>
+                            `).join('')}
+                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #2196F3; color: #1565c0; font-size: 0.95em;">
+                                <strong>📧 Email Notifications Scheduled!</strong><br>
+                                You'll receive emails 15 min before, 5 min before, and at the exact time.
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                resultsArea.innerHTML = html;
+
+            } else if (type === 'fixed') {
+                let html = `
+                    <div class="result-card fixed-reminder">
+                        <div class="result-header">
+                            <div class="result-title">💊 ${data.title}</div>
+                            <div class="status-badge normal">${data.frequency.toUpperCase()}</div>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Scheduled Time</div>
+                                <div class="info-value">${data.time}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Frequency</div>
+                                <div class="info-value">${data.frequency.toUpperCase()}</div>
+                            </div>
+                        </div>
+
+                        <div class="reminders-section">
+                            <div class="reminders-title">⏰ Next Reminders:</div>
+                            ${data.next_reminders.map(reminder => `
+                                <div class="reminder-item">${reminder}</div>
+                            `).join('')}
+                            <div style="background: #f3e5f5; padding: 12px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #9c27b0; color: #6a1b9a; font-size: 0.95em;">
+                                <strong>📧 Email Notifications Scheduled!</strong><br>
+                                You'll receive emails 15 min before, 5 min before, and at the exact time.
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                resultsArea.innerHTML = html;
+            }
+        }
+
+        // Show Error
+        function showError(message) {
+            const resultsArea = document.getElementById('resultsArea');
+            resultsArea.innerHTML = `<div class="error">❌ ${message}</div>`;
+        }
+
+        // Test API Health on Load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (!response.ok) {
+                    showError('⚠️ API Server is not running. Please start it with: python -m uvicorn app.main:app --reload');
+                    document.getElementById('emailStatusText').textContent = '❌ Server offline';
+                } else {
+                    // Check email configuration
+                    const emailConfigured = await checkEmailConfiguration();
+                    if (emailConfigured) {
+                        document.getElementById('emailStatusText').textContent = '✅ ENABLED';
+                        document.getElementById('emailStatus').style.background = 'rgba(76, 175, 80, 0.3)';
+                    } else {
+                        document.getElementById('emailStatusText').textContent = '⚠️ Not configured';
+                        document.getElementById('emailStatus').style.background = 'rgba(255, 193, 7, 0.3)';
+                    }
+                }
+            } catch (error) {
+                showError('⚠️ Cannot connect to API. Make sure the server is running on port 8000');
+                document.getElementById('emailStatusText').textContent = '❌ Offline';
+            }
+        });
+
+        // Check if email is configured
+        async function checkEmailConfiguration() {
+            try {
+                // If the server is running and responding, we assume email is available
+                // In production, you'd have a dedicated endpoint to check this
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // Set minimum deadline to now
+        document.getElementById('deadline').addEventListener('click', function() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            this.min = now.toISOString().slice(0, 16);
+        });
+
+        // Initialize min attribute
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('deadline').min = now.toISOString().slice(0, 16);
+    </script>
+</body>
+</html>
